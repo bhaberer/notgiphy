@@ -20,21 +20,18 @@ set :port, 80
 #   "text"=>"doge"
 # }
 post '/' do
-  debug("Params: #{params}")
-
   require_relative './imgur.rb'
   query = params[:text]
-  _where = params[:channel_name]
   who = params[:user_name]
   channel = params[:channel_id]
 
-  @gifs = Imgur.gifs(params[:text])
-  @choosen = @gifs.sample
+  @image_search = Imgur.gifs(params[:text])
+  @gif = @image_search.sample
 
-  if @chosen.nil?
+  if @gif.nil?
     "Nothing found for that search"
   else
-    result = @choosen['link']
+    result = @gif['link']
     debug("#{params['team_domain']} #{result}")
     debug(gen_payload(query, result, channel, who))
     debug(callback(query, result, channel, who))
@@ -52,6 +49,8 @@ end
 get '/ta' do
   CGI.escapeHTML 'Copyright Carla Souza <contact@carlasouza.com>'
 end
+
+private
 
 def callback(query, res, channel, who)
   uri = URI.parse(ENV['SLACK_URI'] || 'https://hooks.slack.com')
