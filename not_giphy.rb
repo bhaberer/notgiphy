@@ -24,12 +24,12 @@ post '/' do
 
   require_relative './imgur.rb'
   query = params[:text]
-  where = params[:channel_name]
+  _where = params[:channel_name]
   who = params[:user_name]
   channel = params[:channel_id]
 
   @gifs = Imgur.gifs(params[:text])
-  @choosen = @gifs.shuffle.first
+  @choosen = @gifs.sample
   res = @choosen['link']
 
   debug("#{params['team_domain']} #{res}")
@@ -42,29 +42,30 @@ get '/' do
 end
 
 get '/robots.txt' do
- 'User-agent: *'
+  'User-agent: *'
 end
 
 get '/ta' do
   CGI.escapeHTML 'Copyright Carla Souza <contact@carlasouza.com>'
 end
 
-def callback query, res, channel, who
-    uri = URI.parse(ENV['SLACK_URI']) # https://hooks.slack.com
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    request = Net::HTTP::Post.new(ENV['SLACK_ENDPOINT']) # /T0000000/B000000000/XXXXXXXXXXXX
-    request.body = gen_payload(query, res, channel, who)
-    http.request(request)
-    return
+def callback(query, res, channel, who)
+  uri = URI.parse(ENV['SLACK_URI'] || 'https://hooks.slack.com')
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  request = Net::HTTP::Post.new(ENV['SLACK_ENDPOINT'])
+  request.body = gen_payload(query, res, channel, who)
+  http.request(request)
 end
 
-def gen_payload query, res, channel, who
-    "payload={\"text\":\"'#{query}' by @#{who}: <#{res}>\", \"username\":\"notgiphy\", \"channel\":\"#{channel}\", \"icon_emoji\":\":beers:\"}"
+def gen_payload(query, res, channel, who)
+  payload = { text: "#{query}' by @#{who}: <#{res}>",
+              username: :notgiphy, channel: channel, icon_emoji: ':beers:' }
+  "payload=#{JSON.generate(payload)}"
 end
 
-def debug msg
+def debug(msg)
   puts "[DEBUG] #{msg}"
 end
 
