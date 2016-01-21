@@ -30,11 +30,15 @@ post '/' do
 
   @gifs = Imgur.gifs(params[:text])
   @choosen = @gifs.sample
-  res = @choosen['link']
 
-  debug("#{params['team_domain']} #{res}")
-  debug(gen_payload(query, res, channel, who))
-  debug(callback(query, res, channel, who))
+  if @chosen.nil?
+    "Nothing found for that search"
+  else
+    result = @choosen['link']
+    debug("#{params['team_domain']} #{result}")
+    debug(gen_payload(query, result, channel, who))
+    debug(callback(query, result, channel, who))
+  end
 end
 
 get '/' do
