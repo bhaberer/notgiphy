@@ -5,7 +5,7 @@ require 'json'
 class Imgur
   def self.search(term)
     headers = {
-      Authorization: "Client-ID #{ENV['IMGUR_APP_ID']}"
+      'Authorization' => "Client-ID #{ENV['IMGUR_APP_ID']}"
     }
     path = "/3/gallery/search/viral?q_all=#{URI.escape(term)}"
     uri = URI.parse("https://api.imgur.com#{path}")
