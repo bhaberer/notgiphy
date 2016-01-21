@@ -20,25 +20,21 @@ set :port, 80
 #   "text"=>"doge"
 # }
 post '/' do
-  begin
-    debug("Params: #{params}")
+  debug("Params: #{params}")
 
-    require_relative './imgur.rb'
-    query = params[:text]
-    where = params[:channel_name]
-    who = params[:user_name]
-    channel = params[:channel_id]
+  require_relative './imgur.rb'
+  query = params[:text]
+  where = params[:channel_name]
+  who = params[:user_name]
+  channel = params[:channel_id]
 
-    @gifs = Imgur.gifs(params[:text])
-    @choosen = @gifs.shuffle.first
-    res = @choosen['link']
+  @gifs = Imgur.gifs(params[:text])
+  @choosen = @gifs.shuffle.first
+  res = @choosen['link']
 
-    debug("#{params['team_domain']} #{res}")
-    debug(gen_payload(query, res, channel, who))
-    debug(callback(query, res, channel, who))
-  rescue
-    "Something went wrong :sad:"
-  end
+  debug("#{params['team_domain']} #{res}")
+  debug(gen_payload(query, res, channel, who))
+  debug(callback(query, res, channel, who))
 end
 
 get '/' do
