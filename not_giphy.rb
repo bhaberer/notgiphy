@@ -20,7 +20,7 @@ set :port, 80
 #   "text"=>"doge"
 # }
 post '/' do
-  begin
+  # begin
     debug("Params: #{params}")
 
     require_relative './imgur.rb'
@@ -36,9 +36,9 @@ post '/' do
     debug("#{params['team_domain']} #{res}")
     debug(gen_payload(query, res, channel, who))
     debug(callback(query, res, channel, who))
-  rescue
-    "Something went wrong :sad:"
-  end
+  # rescue
+  #  "Something went wrong :sad:"
+  # end
 end
 
 get '/' do
