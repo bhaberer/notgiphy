@@ -63,7 +63,7 @@ def callback(query, res, channel, who)
 end
 
 def gen_payload(query, res, channel, who)
-  payload = { text: "#{query}' by @#{who}: <#{res}>",
+  payload = { text: "'#{query}' by @#{who}: <#{res}>",
               username: :notgiphy, channel: channel, icon_emoji: ':beers:' }
   "payload=#{JSON.generate(payload)}"
 end
